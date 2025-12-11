@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>いろあて クイズ</title>
+    <style>
+        /* 基本デザインは同じ */
+        body {
+            font-family: "Hiragino Maru Gothic Pro", sans-serif;
+            text-align: center;
+            background-color: #e6f7ff; /* 背景を水色っぽく */
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100vh;
+            touch-action: manipulation;
+        }
+        #question-area {
+            font-size: 150px;
+            margin-bottom: 20px;
+        }
+        .choices { display: flex; justify-content: center; gap: 20px; }
+        .btn {
+            background-color: #fff;
+            border: 4px solid #0099cc; /* 枠線を青に */
+            border-radius: 20px;
+            font-size: 50px;
+            padding: 30px 40px;
+            cursor: pointer;
+            width: 40%;
+            font-weight: bold;
+            box-shadow: 0 5px 0 #006080;
+            user-select: none;
+        }
+        .btn:active { box-shadow: none; transform: translateY(5px); }
+        #feedback {
+            font-size: 100px; color: red; font-weight: bold;
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%); display: none;
+            text-shadow: 2px 2px 0 #fff;
+        }
+        /* 戻るボタン */
+        .home-link {
+            position: absolute; top: 20px; left: 20px;
+            font-size: 20px; text-decoration: none;
+            background: #eee; padding: 10px 20px; border-radius: 30px;
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="home-link">🏠 もどる</a>
+
+    <div id="question-area">❤️</div>
+
+    <div class="choices">
+        <div class="btn" id="btn1" onclick="checkAnswer(0)">あか</div>
+        <div class="btn" id="btn2" onclick="checkAnswer(1)">あお</div>
+    </div>
+    <div id="feedback">⭕️</div>
+
+    <script>
+        const questions = [
+            { emoji: "❤️", correct: "あか", wrong: "あお" },
+            { emoji: "💙", correct: "あお", wrong: "きいろ" },
+            { emoji: "💛", correct: "きいろ", wrong: "あか" },
+            { emoji: "💚", correct: "みどり", wrong: "あか" },
+            { emoji: "💜", correct: "むらさき", wrong: "みどり" },
+            { emoji: "🖤", correct: "くろ", wrong: "しろ" }
+        ];
+
+        let currentQuestion = {};
+
+        function setQuestion() {
+            const randomIndex = Math.floor(Math.random() * questions.length);
+            currentQuestion = questions[randomIndex];
+            document.getElementById("question-area").textContent = currentQuestion.emoji;
+
+            const isCorrectFirst = Math.random() < 0.5;
+            const btn1 = document.getElementById("btn1");
+            const btn2 = document.getElementById("btn2");
+
+            if (isCorrectFirst) {
+                btn1.textContent = currentQuestion.correct;
+                btn2.textContent = currentQuestion.wrong;
+                btn1.dataset.isCorrect = "true";
+                btn2.dataset.isCorrect = "false";
+            } else {
+                btn1.textContent = currentQuestion.wrong;
+                btn2.textContent = currentQuestion.correct;
+                btn1.dataset.isCorrect = "false";
+                btn2.dataset.isCorrect = "true";
+            }
+            document.getElementById("feedback").style.display = "none";
+        }
+
+        function checkAnswer(btnIndex) {
+            const btns = document.querySelectorAll('.btn');
+            const clickedBtn = btns[btnIndex];
+            const feedback = document.getElementById("feedback");
+
+            if (clickedBtn.dataset.isCorrect === "true") {
+                feedback.textContent = "⭕️";
+                feedback.style.display = "block";
+                setTimeout(setQuestion, 1000);
+            } else {
+                feedback.textContent = "✖";
+                feedback.style.display = "block";
+                setTimeout(() => { feedback.style.display = "none"; }, 500);
+            }
+        }
+        setQuestion();
+    </script>
+</body>
+</html>
