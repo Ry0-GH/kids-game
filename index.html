@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ゲームメニュー</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            text-align: center;
+            background-color: #ffeff5; /* 薄いピンク */
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100vh;
+        }
+        h1 { font-size: 30px; color: #ff6699; margin-bottom: 40px; }
+        .menu-btn {
+            display: block;
+            width: 80%;
+            max-width: 400px;
+            margin: 20px auto;
+            padding: 30px;
+            font-size: 40px;
+            font-weight: bold;
+            color: white;
+            text-decoration: none; /* 下線を消す */
+            border-radius: 25px;
+            box-shadow: 0 6px 0 rgba(0,0,0,0.2);
+            transition: transform 0.1s;
+        }
+        .btn-animal { background-color: #ff9933; } /* オレンジ */
+        .btn-color { background-color: #33ccff; }  /* 水色 */
+        
+        .menu-btn:active {
+            transform: translateY(6px);
+            box-shadow: none;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>どのゲームであそぶ？</h1>
+
+    <a href="animal.html" class="menu-btn btn-animal">
+        🐶 どうぶつ
+    </a>
+
+    <a href="color.html" class="menu-btn btn-color">
+        🎨 いろあて
+    </a>
+
+</body>
+</html>
