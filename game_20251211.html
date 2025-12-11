@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>おなまえ クイズ</title>
+    <style>
+        body {
+            font-family: "Hiragino Maru Gothic Pro", "Round", sans-serif;
+            text-align: center;
+            background-color: #f0f8ff;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100vh; /* 画面いっぱいに使う */
+            touch-action: manipulation; /* ダブルタップ拡大防止 */
+        }
+        #question-area {
+            font-size: 150px; /* 画像（絵文字）の大きさ */
+            margin-bottom: 20px;
+        }
+        .choices {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .btn {
+            background-color: #fff;
+            border: 4px solid #ff9900;
+            border-radius: 20px;
+            font-size: 50px; /* 文字の大きさ */
+            padding: 30px 50px;
+            cursor: pointer;
+            width: 40%;
+            font-weight: bold;
+            box-shadow: 0 5px 0 #cc7a00;
+            user-select: none;
+        }
+        .btn:active {
+            box-shadow: none;
+            transform: translateY(5px);
+        }
+        #feedback {
+            font-size: 100px;
+            color: red;
+            font-weight: bold;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none; /* 最初は隠す */
+            text-shadow: 2px 2px 0 #fff;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="question-area">🍎</div>
+
+    <div class="choices">
+        <div class="btn" id="btn1" onclick="checkAnswer(0)">りんご</div>
+        <div class="btn" id="btn2" onclick="checkAnswer(1)">ばなな</div>
+    </div>
+
+    <div id="feedback">⭕️</div>
+
+    <script>
+        // 問題データ（ここを書き換えると問題が変わります）
+        // emoji: 表示する絵, correct: 正解の文字, wrong: 間違いの文字
+        const questions = [
+            { emoji: "🍎", correct: "りんご", wrong: "ばなな" },
+            { emoji: "🐶", correct: "いぬ", wrong: "ねこ" },
+            { emoji: "🚗", correct: "くるま", wrong: "でんしゃ" },
+            { emoji: "🐱", correct: "ねこ", wrong: "あり" },
+            { emoji: "🍌", correct: "ばなな", wrong: "いちご" }
+        ];
+
+        let currentQuestion = {};
+
+        function setQuestion() {
+            // ランダムに問題を選ぶ
+            const randomIndex = Math.floor(Math.random() * questions.length);
+            currentQuestion = questions[randomIndex];
+
+            // 絵を表示
+            document.getElementById("question-area").textContent = currentQuestion.emoji;
+
+            // 正解と不正解をランダムに配置する（0か1か）
+            const isCorrectFirst = Math.random() < 0.5;
+            
+            const btn1 = document.getElementById("btn1");
+            const btn2 = document.getElementById("btn2");
+
+            if (isCorrectFirst) {
+                btn1.textContent = currentQuestion.correct;
+                btn2.textContent = currentQuestion.wrong;
+                // 正解のボタン番号を記録しておく
+                btn1.dataset.isCorrect = "true";
+                btn2.dataset.isCorrect = "false";
+            } else {
+                btn1.textContent = currentQuestion.wrong;
+                btn2.textContent = currentQuestion.correct;
+                btn1.dataset.isCorrect = "false";
+                btn2.dataset.isCorrect = "true";
+            }
+
+            // フィードバックを消す
+            document.getElementById("feedback").style.display = "none";
+        }
+
+        function checkAnswer(btnIndex) {
+            const btns = document.querySelectorAll('.btn');
+            const clickedBtn = btns[btnIndex];
+            const feedback = document.getElementById("feedback");
+
+            if (clickedBtn.dataset.isCorrect === "true") {
+                // 正解の場合
+                feedback.textContent = "⭕️";
+                feedback.style.color = "red";
+                feedback.style.display = "block";
+                
+                // 1秒後に次の問題へ
+                setTimeout(setQuestion, 1000);
+            } else {
+                // 不正解の場合（何もしないか、バツを出す）
+                feedback.textContent = "✖";
+                feedback.style.color = "blue";
+                feedback.style.display = "block";
+                
+                // 0.5秒後に消す（再挑戦させる）
+                setTimeout(() => {
+                    feedback.style.display = "none";
+                }, 500);
+            }
+        }
+
+        // 最初に問題をセット
+        setQuestion();
+
+    </script>
+</body>
+</html>
